@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Excuse Generator (Streaming)</title>
+</head>
+<body>
+    <h1> AI Excuse Generator</h1>
+
+    <form id="excuseForm">
+        <label>Situation:</label><br>
+        <input name="situation"><br><br>
+
+        <label>Severity (1-5):</label><br>
+        <input type="number" name="severity" min="1" max="5"><br><br>
+
+        <label>Style:</label><br>
+        <select name="style">
+            <option>Realistic</option>
+            <option>Absurd</option>
+            <option>Funny</option>
+            <option>Sarcastic</option>
+        </select><br><br>
+
+        <label>Blame Target:</label><br>
+        <select name="blame">
+            <option>Self</option>
+            <option>Technology</option>
+            <option>Pet</option>
+            <option>Aliens</option>
+            <option>Government</option>
+        </select><br><br>
+
+        <label>Length:</label><br>
+        <select name="length">
+            <option>Short</option>
+            <option>Medium</option>
+            <option>Long</option>
+        </select><br><br>
+
+        <label>Profession:</label><br>
+        <input name="profession"><br><br>
+
+        <label>Time of Day:</label><br>
+        <select name="time">
+            <option>Morning</option>
+            <option>Afternoon</option>
+            <option>Night</option>
+        </select><br><br>
+
+        <label>Creativity (1-10):</label><br>
+        <input type="number" name="creativity" min="1" max="10"><br><br>
+
+        <button type="submit">Generate Excuse</button>
+    </form>
+
+    <h2>Your Excuse:</h2>
+    <pre id="excuseOutput" style="white-space: pre-wrap;"></pre>
+
+   <script>
+    const form = document.getElementById('excuseForm');
+    const output = document.getElementById('excuseOutput');
+
+    form.onsubmit = function (e) {
+        e.preventDefault();
+        output.textContent = "Generating...";
+
+        const formData = new FormData(form);
+        const params = new URLSearchParams(formData).toString();
+        const eventSource = new EventSource("/stream?" + params);
+
+        output.textContent = "";
+
+        eventSource.onmessage = function (e) {
+            output.textContent += e.data + " ";
+        };
+
+        eventSource.onerror = function () {
+            eventSource.close();
+        };
+    };
+</script>
+
+    <!-- EventSource polyfill for POST support -->
+    <script src="https://unpkg.com/event-source-polyfill@1.0.33/eventsource.min.js"></script>
+</body>
+</html>
