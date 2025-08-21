@@ -2,12 +2,15 @@ from flask import Flask, render_template, request, jsonify, stream_with_context,
 import google.generativeai as genai
 import json
 import re
+from dotenv import load_dotenv
+import os
 
-# Configure Gemini API
-genai.configure(api_key="AIzaSyCGgXf5014M6H_vHsyJjPXypMZ3CMx9wRI")
+load_dotenv()
+api_key = os.getenv("GENAI_API_KEY")
+
+genai.configure(api_key=api_key)
 model = genai.GenerativeModel("models/gemini-1.5-flash")
 
-# Chat history per session
 chat_sessions = {}
 
 app = Flask(__name__)
@@ -81,15 +84,15 @@ Strict JSON ONLY:
 
         try:
             parsed = json.loads(json_str)
-            print("✅ Parsed JSON:", parsed)
+            print("Parsed JSON:", parsed)
             return jsonify(parsed)
         except json.JSONDecodeError as je:
-            print("❌ JSON Decode Error:", je)
-            print("🔍 Problematic JSON string:", json_str)
+            print("JSON Decode Error:", je)
+            print("Problematic JSON string:", json_str)
             return jsonify({"label": "Oops! Couldn't understand the AI.", "type": "dropdown", "options": ["Retry"]})
 
     except Exception as e:
-        print("🔥 Unhandled Error in /next-field:", str(e))
+        print("Unhandled Error in /next-field:", str(e))
         return jsonify({"label": "Critical error occurred.", "type": "dropdown", "options": ["Retry"]})
 
 @app.route('/generate', methods=['POST'])
@@ -114,8 +117,8 @@ def generate():
                 if hasattr(chunk, 'text'):
                     yield chunk.text
         except Exception as e:
-            print("🔥 Error during excuse generation:", str(e))
-            yield f"❌ Error: {str(e)}"
+            print("Error during excuse generation:", str(e))
+            yield f"Error: {str(e)}"
 
     return Response(stream_with_context(stream_response()), content_type='text/plain')
 
