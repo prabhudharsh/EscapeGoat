@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome - EscapeGoat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        .pixel-font {
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        /* Unified yellow button style */
+        .pixel-btn-yellow {
+            @apply inline-block border-2 border-black text-black font-semibold rounded-lg;
+            background-color: #FFD700; /* Gold/Yellow */
+            box-shadow: 4px 4px 0px 0px #8B4513; /* SaddleBrown for a dark, pixel-art shadow */
+            transition: all 0.1s ease-in-out;
+        }
+        .pixel-btn-yellow:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px #8B4513;
+        }
+
+        #gif-background {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            min-height: 100%;
+            min-width: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+        
+        .overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        
+        .text-border {
+            text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <div class="overlay"></div>
+    <img src="{{ url_for('static', filename='landing.gif') }}" alt="Pixel Art GIF Background" id="gif-background">
+
+    <nav class="fixed top-0 left-0 right-0 p-4 bg-gray-900 bg-opacity-40 text-white pixel-font z-10">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <span class="text-lg md:text-xl">👾</span>
+                <span class="text-lg md:text-xl">EscapeGoat</span>
+            </div>
+            <div class="space-x-2 md:space-x-4">
+                <a href="{{ url_for('login') }}" class="pixel-btn-yellow px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm">Login</a>
+                <a href="{{ url_for('register') }}" class="pixel-btn-yellow px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex flex-col items-center justify-center min-h-screen text-center px-4">
+        <div class="animate-float">
+            <h2 class="text-xl md:text-2xl mb-2 pixel-font text-border text-yellow-300">Start</h2>
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 pixel-font text-border text-yellow-300">EscapeGoat</h1>
+            <p class="text-lg md:text-xl mb-8 max-w-2xl text-border">
+                Generate excuses on the go. ✨
+            </p>
+            <a href="{{ url_for('register') }}" class="pixel-btn-yellow px-8 py-3 md:px-12 md:py-4 text-base md:text-lg">
+                Get started
+            </a>
+        </div>
+    </main>
+
+</body>
+</html>
