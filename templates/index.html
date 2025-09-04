@@ -69,10 +69,10 @@
 
     <nav class="fixed top-0 left-0 right-0 p-4 bg-gray-900 bg-opacity-40 text-white pixel-font z-10">
         <div class="container mx-auto flex items-center justify-between">
-            <div class="flex items-center space-x-2">
+            <a href="{{ url_for('index') }}" class="flex items-center space-x-2">
                 <span class="text-lg md:text-xl">👾</span>
                 <span class="text-lg md:text-xl">EscapeGoat</span>
-            </div>
+            </a>
             <div class="space-x-2 md:space-x-4">
                 <a href="{{ url_for('login') }}" class="pixel-btn-yellow px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm">Login</a>
                 <a href="{{ url_for('register') }}" class="pixel-btn-yellow px-3 py-1 md:px-4 md:py-2 text-xs md:text-sm">Sign Up</a>

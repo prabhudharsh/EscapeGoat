@@ -9,6 +9,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 load_dotenv()
 
 # Initialize the Flask application
+# Make sure you have a 'templates' folder for your HTML files
+# and a 'static' folder for your images/gifs.
 app = Flask(__name__)
 
 # Flask configuration
@@ -51,21 +53,27 @@ def load_user(user_id):
 # --- Routes ---
 @app.route('/')
 def index():
-    """Renders the landing page."""
+    """Renders the landing page or redirects to dashboard if logged in."""
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
     return render_template('index.html')
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """Handles user registration."""
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
     if request.method == 'POST':
         username = request.form.get('username')
         email = request.form.get('email')
         password = request.form.get('password')
 
-        # Check if the user already exists
-        user = User.query.filter_by(username=username).first()
-        if user:
+        # Check if the username or email already exists
+        if User.query.filter_by(username=username).first():
             flash('Username already exists. Please choose a different one.', 'danger')
+            return redirect(url_for('register'))
+        if User.query.filter_by(email=email).first():
+            flash('Email address already registered. Please use a different one.', 'danger')
             return redirect(url_for('register'))
 
         new_user = User(username=username, email=email)
@@ -76,9 +84,9 @@ def register():
             db.session.commit()
             flash('Registration successful! You can now log in.', 'success')
             return redirect(url_for('login'))
-        except Exception:
+        except Exception as e:
             db.session.rollback()
-            flash('An error occurred during registration. Please try again.', 'danger')
+            flash(f'An error occurred during registration: {e}', 'danger')
             return redirect(url_for('register'))
 
     return render_template('register.html')
@@ -86,6 +94,8 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """Handles user login."""
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
@@ -122,3 +132,4 @@ if __name__ == '__main__':
         db.create_all()
 
     app.run(debug=True)
+
